@@ -14,4 +14,8 @@ print(shapefiles.head())
 
 print(shapefiles['geometry'].info())
 
-shapefiles.plot()
+print(shapefiles.info())
+
+print(shapefiles['name'].describe())
+
+print(shapefiles['name'].head())
