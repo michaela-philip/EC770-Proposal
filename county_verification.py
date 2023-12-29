@@ -3,6 +3,8 @@ import pandas as pd
 
 from helpers.import_crosswalk import import_crosswalk
 from helpers.import_data import import_data
+from helpers.import_shapefiles import import_shapefiles
+
 
 filepath_0 = 'https://www2.census.gov/geo/docs/reference/codes2020/place_by_cou/st'
 crosswalk = import_crosswalk(filepath_0)
@@ -13,13 +15,25 @@ columns = ['drop1', 'cofips', 'stfips', 'drop2']
 dropcols = ['drop1', 'drop2']
 adult_data = import_data(filepath, dropcols, columns, colspecs)
 
+filepath = "./inputs/fullDownload.geojson"
+shapefiles = import_shapefiles(filepath)
+
 print(adult_data.head())
 print(crosswalk.head())
+print(shapefiles.head())
 
-print(adult_data.shape)
+crosswalk.rename({'STATEFP':'stfips', 'COUNTYFP':'cofips', 'PLACENAME':'city'}, axis = 1, inplace = True)
 
-crosswalk.rename({'STATEFP':'stfips', 'COUNTYFP':'cofips'}, axis = 1, inplace = True)
+shapefile_to_county = shapefiles.merge(crosswalk, how = 'left', on  = 'city')
+print(shapefile_to_county.head())
 
-geo_match = adult_data.merge(crosswalk, how = 'inner', on = ['stfips', 'cofips'])
+geo_match = adult_data.merge(shapefile_to_county, how = 'left', on = ['stfips', 'cofips'])
+print(geo_match.head())
 
-geo_match.describe()
+
+# print(adult_data.shape)
+
+# 
+# geo_match = adult_data.merge(crosswalk, how = 'inner', on = ['stfips', 'cofips'])
+
+# print(geo_match.describe())

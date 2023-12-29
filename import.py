@@ -10,7 +10,16 @@ def main():
     dropcols = ['drop1', 'drop2']
     adult_data = import_data(filepath, dropcols, columns, colspecs)
 
-    return adult_data 
+    adult_data.to_csv('./adult_data.csv')
+
+    print("adult csv created")
+
+    filepath = 'https://wwwn.cdc.gov/nchs/data/nhanes3/1a/youth.dat'
+    youth_data = import_data(filepath, dropcols, columns, colspecs)
+
+    youth_data.to_csv('./youth_data.csv')
+
+    print("youth csv created")
 
 
 if __name__ == '__main__':
